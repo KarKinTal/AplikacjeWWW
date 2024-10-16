@@ -1,3 +1,5 @@
+from django.urls import include, path
+from debug_toolbar.toolbar import debug_toolbar_urls
 """
 URL configuration for mysite project.
 
@@ -19,4 +21,4 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+] + debug_toolbar_urls()
