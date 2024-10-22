@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 # Create your models here.
 # deklaracja statycznej listy wyboru do wykorzystania w klasie modelu
@@ -30,3 +31,36 @@ class Person(models.Model):
 
     def __str__(self):
         return self.name
+
+
+PLEC_CHOICES = [
+    ('K', 'Kobieta'),
+    ('M', 'Mężczyzna'),
+    ('I', 'Inne'),
+]
+
+class Stanowisko(models.Model):
+    nazwa = models.CharField(max_length=100, blank=False, null=False)
+    opis = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nazwa
+
+
+class Osoba(models.Model):
+    class PlecChoices(models.IntegerChoices):
+        KOBIETA = 1, 'Kobieta'
+        MEZCZYZNA = 2, 'Mężczyzna'
+        INNE = 3, 'Inne'
+
+    imie = models.CharField(max_length=50, blank=False, null=False)
+    nazwisko = models.CharField(max_length=50, blank=False, null=False)
+    plec = models.IntegerField(choices=PlecChoices.choices, default=PlecChoices.KOBIETA)
+    stanowisko = models.ForeignKey(Stanowisko, on_delete=models.SET_NULL, null=True, blank=True)
+    data_dodania = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['nazwisko']
+
+    def __str__(self):
+        return f"{self.imie} {self.nazwisko}"
