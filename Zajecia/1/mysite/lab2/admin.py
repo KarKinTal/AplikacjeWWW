@@ -12,7 +12,7 @@ class OsobaAdmin(admin.ModelAdmin):
 
     def stanowisko_new_name(self, obj):
         if obj.stanowisko:
-            return f"{obj.stanowisko.name} ({obj.stanowisko.id})"
+            return f"{obj.stanowisko.nazwa} ({obj.stanowisko.id})"
         return "Brak stanowiska"
 
 

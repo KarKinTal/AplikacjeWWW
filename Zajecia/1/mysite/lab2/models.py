@@ -1,5 +1,8 @@
 from django.db import models
 from datetime import date
+from django.utils.timezone import now
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 # deklaracja statycznej listy wyboru do wykorzystania w klasie modelu
@@ -53,14 +56,28 @@ class Osoba(models.Model):
         MEZCZYZNA = 2, 'Mężczyzna'
         INNE = 3, 'Inne'
 
-    imie = models.CharField(max_length=50, blank=False, null=False)
-    nazwisko = models.CharField(max_length=50, blank=False, null=False)
+    imie = models.CharField(
+        max_length=50,
+        validators=[RegexValidator(regex=r'^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$', message="Imię może zawierać tylko litery.")],
+        blank=False, null=False
+    )
+    nazwisko = models.CharField(
+        max_length=50,
+        validators=[
+            RegexValidator(regex=r'^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$', message="Nazwisko może zawierać tylko litery.")],
+        blank=False, null=False
+    )
     plec = models.IntegerField(choices=PlecChoices.choices, default=PlecChoices.KOBIETA)
     stanowisko = models.ForeignKey(Stanowisko, on_delete=models.SET_NULL, null=True, blank=True)
-    data_dodania = models.DateField(auto_now_add=True)
+    data_dodania = models.DateField(default=now)
 
     class Meta:
         ordering = ['nazwisko']
 
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"
+
+    def clean(self):
+        # Walidacja daty dodania
+        if self.data_dodania and self.data_dodania > date.today():
+            raise ValidationError("Data dodania nie może być w przyszłości.")
