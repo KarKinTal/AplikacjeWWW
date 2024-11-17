@@ -7,21 +7,24 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Osoba, Stanowisko
 from .serializers import OsobaSerializer, StanowiskoSerializer
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def osoba_list(request):
-    if request.method == 'GET':
+    """
+    Widok zwraca listę obiektów Osoba:
+    - Tylko właścicielom ich własnych obiektów.
+    - Jeśli użytkownik ma uprawnienie `can_view_other_persons`, widzi wszystkie obiekty.
+    """
+    if request.user.has_perm('lab2.can_view_other_persons'):
+        osoby = Osoba.objects.all()
+    else:
         osoby = Osoba.objects.filter(wlasciciel=request.user)
-        serializer = OsobaSerializer(osoby, many=True)
-        return Response(serializer.data)
 
-    elif request.method == 'POST':
-        serializer = OsobaSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(wlasciciel=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = OsobaSerializer(osoby, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def osoba_detail(request, pk):
@@ -76,6 +79,20 @@ def osoba_search(request):
         serializer = OsobaSerializer(osoby, many=True)
         return Response(serializer.data)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+def osoba_permission_check(request, pk):
+    """
+    Sprawdza, czy użytkownik posiada uprawnienie 'view_osoba'.
+    Jeśli tak, zwraca dane obiektu Osoba.
+    """
+    if not request.user.has_perm('app_name.view_osoba'):  # Zamień 'app_name' na nazwę swojej aplikacji
+        raise PermissionDenied("Nie posiadasz uprawnienia do przeglądania tego obiektu.")
+
+    try:
+        osoba = Osoba.objects.get(pk=pk)
+        return HttpResponse(f"Użytkownik o id={osoba.pk} to {osoba.imie} {osoba.nazwisko}.")
+    except Osoba.DoesNotExist:
+        return HttpResponse(f"Osoba o id={pk} nie istnieje.")
 
 @api_view(['GET'])
 def stanowisko_list(request):
