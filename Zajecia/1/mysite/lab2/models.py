@@ -3,6 +3,7 @@ from datetime import date
 from django.utils.timezone import now
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 # Create your models here.
 # deklaracja statycznej listy wyboru do wykorzystania w klasie modelu
@@ -70,6 +71,7 @@ class Osoba(models.Model):
     plec = models.IntegerField(choices=PlecChoices.choices, default=PlecChoices.KOBIETA)
     stanowisko = models.ForeignKey(Stanowisko, on_delete=models.SET_NULL, null=True, blank=True)
     data_dodania = models.DateField(default=now)
+    wlasciciel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='osoby', null=True, blank=True)
 
     class Meta:
         ordering = ['nazwisko']
