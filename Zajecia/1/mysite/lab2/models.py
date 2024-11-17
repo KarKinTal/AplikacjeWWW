@@ -75,6 +75,9 @@ class Osoba(models.Model):
 
     class Meta:
         ordering = ['nazwisko']
+        permissions = [
+            ("can_view_other_persons", "Can view persons owned by other users"),
+        ]
 
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"

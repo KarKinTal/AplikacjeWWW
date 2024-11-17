@@ -10,6 +10,7 @@ urlpatterns = [
     path('osoby/create/', views.osoba_create, name='osoba-create'),
     path('osoby/<int:pk>/update/', views.osoba_update, name='osoba-update'),
     path('osoby/<int:pk>/delete/', views.osoba_delete, name='osoba-delete'),
+    path('osoba/<int:pk>/check-permission/', views.osoba_permission_check, name='osoba_permission_check'),
     path('stanowiska/', views.stanowisko_list, name='stanowisko-list'),
     path('stanowiska/<int:pk>/', views.stanowisko_detail, name='stanowisko-detail'),
     path('stanowiska/create/', views.stanowisko_create, name='stanowisko-create'),
