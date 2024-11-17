@@ -115,3 +115,17 @@ def stanowisko_update_delete(request, pk):
     elif request.method == 'DELETE':
         stanowisko.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def stanowisko_members(request, pk):
+    """
+    Wyświetla wszystkie osoby przypisane do danego stanowiska.
+    """
+    stanowisko = get_object_or_404(Stanowisko, pk=pk)
+
+    osoby = Osoba.objects.filter(stanowisko=stanowisko)
+
+    serializer = OsobaSerializer(osoby, many=True)
+    return Response(serializer.data)

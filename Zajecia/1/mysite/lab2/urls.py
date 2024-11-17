@@ -14,6 +14,7 @@ urlpatterns = [
     path('stanowiska/<int:pk>/', views.stanowisko_detail, name='stanowisko-detail'),
     path('stanowiska/create/', views.stanowisko_create, name='stanowisko-create'),
     path('stanowiska/<int:pk>/update_delete/', views.stanowisko_update_delete, name='stanowisko-update-delete'),
+    path('stanowisko/<int:pk>/members/', views.stanowisko_members, name='stanowisko-members'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token-auth/', include('rest_framework.urls')),
     path('api-token-auth/', obtain_auth_token),
