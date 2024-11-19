@@ -85,7 +85,7 @@ def osoba_permission_check(request, pk):
     Sprawdza, czy użytkownik posiada uprawnienie 'view_osoba'.
     Jeśli tak, zwraca dane obiektu Osoba.
     """
-    if not request.user.has_perm('app_name.view_osoba'):  # Zamień 'app_name' na nazwę swojej aplikacji
+    if not request.user.has_perm('lab2.view_osoba'):
         raise PermissionDenied("Nie posiadasz uprawnienia do przeglądania tego obiektu.")
 
     try:
