@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Osoba, Stanowisko
+from .models import Osoba, Stanowisko, Person
 from .serializers import OsobaSerializer, StanowiskoSerializer
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
