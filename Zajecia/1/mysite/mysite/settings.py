@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'lab2',
     "debug_toolbar",
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
@@ -141,4 +142,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+}
+
+GRAPHENE = {
+    "SCHEMA": "lab2.schema.schema"
 }
